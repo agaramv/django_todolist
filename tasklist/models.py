@@ -7,3 +7,6 @@ class TaskList(models.Model):
   description = models.TextField(blank=True)
   created = models.DateField()
   dueDate = models.DateTimeField()
+
+  def __str__(self) -> str:
+      return self.title
