@@ -10,7 +10,9 @@ urlpatterns = [
   # path('task/create/', views.taskCreate, name="task-create"),
   # path('task/delete/<str:pk>/', views.taskDelete, name="task-delete"),
   # path('task/universal/<str:pk>/', views.TaskListUniversal.as_view(), name="task-univesal")
-  path('task/<str:pk>', views.TaskListDetail.as_view(), name="task-detail")
+  path('task/<str:pk>', views.TaskListDetail.as_view(), name="task-detail"),
+  path('users/', views.UserList.as_view(), name="user-list"),
+  path('users/<int:pk>', views.UserDetail.as_view(), name="user-list")
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

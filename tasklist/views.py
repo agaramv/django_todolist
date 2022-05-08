@@ -1,10 +1,13 @@
+from collections import UserDict
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view, APIView
 from rest_framework.response import Response
-from .serializers import TaskListSerializer
-from .models import TaskList
+from .serializers import TaskListSerializer, UserSerializer
+from .models import TaskList, User
 from rest_framework import generics
+
+from tasklist import serializers
 
 # API Overview
 
@@ -68,42 +71,56 @@ class TaskListAll(generics.ListCreateAPIView):
     queryset = TaskList.objects.all()
     serializer_class = TaskListSerializer
 
+    def perform_create(self, serializer):
+      serializer.save(owner=self.request.user)
+
 
 class TaskListDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = TaskList.objects.all()
     serializer_class = TaskListSerializer
 
-class TaskListUniversal(APIView):
-  """
-    List all snippets, or create a new snippet.
-  """
-  def get_obj(self, pk):
-    try:
-      return TaskList.objects.get(id=pk)
-    except TaskList.DoesNotExist:
-      return Response(status = status.HTTP_404_NOT_FOUND)
 
-  def get(self, request, pk, format=None):
-      tasks = TaskList.objects.all()
-      serializer = TaskListSerializer(tasks, many=True)
-      return Response(serializer.data)
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+# class TaskListUniversal(APIView):
+#   """
+#     List all snippets, or create a new snippet.
+#   """
+#   def get_obj(self, pk):
+#     try:
+#       return TaskList.objects.get(id=pk)
+#     except TaskList.DoesNotExist:
+#       return Response(status = status.HTTP_404_NOT_FOUND)
+
+#   def get(self, request, pk, format=None):
+#       tasks = TaskList.objects.all()
+#       serializer = TaskListSerializer(tasks, many=True)
+#       return Response(serializer.data)
   
-  def post(self, request, pk, format=None):
-    serializer = TaskListSerializer(data=request.data)
-    if serializer.is_valid():
-      serializer.save()
-    print(serializer)
-    return Response(serializer.data)
+#   def post(self, request, pk, format=None):
+#     serializer = TaskListSerializer(data=request.data)
+#     if serializer.is_valid():
+#       serializer.save()
+#     print(serializer)
+#     return Response(serializer.data)
 
-  def put(self, request, pk, format=None):
-    task = TaskList.get_obj(pk)
-    serializer = TaskListSerializer(instance=task, data=request.data)
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#   def put(self, request, pk, format=None):
+#     task = TaskList.get_obj(pk)
+#     serializer = TaskListSerializer(instance=task, data=request.data)
+#     if serializer.is_valid():
+#       serializer.save()
+#       return Response(serializer.data)
+#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-  def delete(self, request, pk, format=None):
-    task = TaskList.get_obj(pk)
-    task.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+#   def delete(self, request, pk, format=None):
+#     task = TaskList.get_obj(pk)
+#     task.delete()
+#     return Response(status=status.HTTP_204_NO_CONTENT)
