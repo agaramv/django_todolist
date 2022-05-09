@@ -4,8 +4,10 @@ from rest_framework import status
 from rest_framework.decorators import api_view, APIView
 from rest_framework.response import Response
 from .serializers import TaskListSerializer, UserSerializer
-from .models import TaskList, User
+from .models import TaskList
 from rest_framework import generics
+from rest_framework import permissions
+from django.contrib.auth.models import User
 
 from tasklist import serializers
 
@@ -14,11 +16,14 @@ from tasklist import serializers
 @api_view(['GET'])
 def apiOverview(request):
   api_urls = {
-    'List' : '/task/all',
-    'View-Task': '/task/view/<str:pk>',
-    'Create': '/task/create',
-    'Update': '/task/update/<str:pk>',
-    'Delete': '/task/delete/<str:pk>'
+    'Task List' : '/task/all',
+    'Task-Retrieve': '/task/view/<str:pk>',
+    'Task-Create': '/task/create',
+    'Task-Update': '/task/update/<str:pk>',
+    'Task-Delete': '/task/delete/<str:pk>',
+    'Task_CRUD': '/task/<str:pk>',
+    'User-List': '/user/',
+    'User-Retrieve': '/user/<int:pk>'
   }
   return Response(api_urls)
 
@@ -70,6 +75,7 @@ def taskDelete(request, pk):
 class TaskListAll(generics.ListCreateAPIView):
     queryset = TaskList.objects.all()
     serializer_class = TaskListSerializer
+    permissions_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
       serializer.save(owner=self.request.user)
@@ -78,8 +84,7 @@ class TaskListAll(generics.ListCreateAPIView):
 class TaskListDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = TaskList.objects.all()
     serializer_class = TaskListSerializer
-
-
+    permissions_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()

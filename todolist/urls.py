@@ -15,11 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path("api/", include('tasklist.urls')),
-    path("", TemplateView.as_view(template_name='home.html'), name='home')
+    path("auth/", include('rest_framework.urls')),
+    # path("", TemplateView.as_view(template_name='home.html'), name='home'),
+    path("", RedirectView.as_view(url='api/', permanent=False), name="api-home")
+      # path('doc/', schema_view.with_ui('swagger', cache_timeout=0),
+      #    name='schema-swagger-ui')
 ]
