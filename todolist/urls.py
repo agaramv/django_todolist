@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import TemplateView, RedirectView
 
-
+# auth/ and accounts/ will both all users to login/logout. auth is django rest, while accounts is defautl django auth. 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),

@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'tasklist',
 
-]
+] 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

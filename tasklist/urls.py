@@ -17,15 +17,21 @@ from drf_yasg import openapi
 
 urlpatterns = [
   path('', views.apiOverview, name="api-overview"),
+  
+  # Traditional Todo CRUD APIS
   path('task/all/', views.TaskListAll.as_view(), name="task-list"),
-  # path('task/view/<str:id>/', views.taskView, name="task-view"),
-  # path('task/update/<str:id>/', views.taskUpdate, name="task-update"),
-  # path('task/create/', views.taskCreate, name="task-create"),
-  # path('task/delete/<str:pk>/', views.taskDelete, name="task-delete"),
+  path('task/view/<str:id>/', views.taskView, name="task-view"),
+  path('task/update/<str:id>/', views.taskUpdate, name="task-update"),
+  path('task/create/', views.taskCreate, name="task-create"),
+  path('task/delete/<str:pk>/', views.taskDelete, name="task-delete"),
   # path('task/universal/<str:pk>/', views.TaskListUniversal.as_view(), name="task-univesal")
-  path('task/<str:pk>', views.TaskListDetail.as_view(), name="task-detail"),
+
+  # TODO CRUD Apis using generic class based views
+  path('task/<str:pk>', views.TaskListDetail.as_view(), name="task-detail"), # tasklistDetail will contain tasks 
+  
+  # Users Patterns using Generic class based views
   path('users/', views.UserList.as_view()),
-  path('users/<int:pk>', views.UserDetail.as_view()),
+  path('users/<int:pk>', views.UserDetail.as_view()), # User Detail only contains retrieve, since we don't want to allow users to manipulate users
 
   
 ]
